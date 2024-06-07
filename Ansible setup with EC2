@@ -1,0 +1,18 @@
+#!/bin/bash
+sudo apt update
+sudo apt install python3-pip -y
+sudo mkdir /etc/ansible
+sudo bash -c 'cat<<EOF > /etc/ansible/hosts
+[ws]
+127.0.0.1
+EOF'
+sudo apt install ansible -y 
+ssh-keygen -b 3072 -t rsa -f ~/.ssh/sshkey -q -N ""
+cat ~/.ssh/sshkey.pub | cat >> ~/.ssh/authorized_keys
+
+sudo bash -c 'cat<<EOF > ~/.ssh/config
+Host *
+        User root
+        IdentityFile ~/.ssh/sshkey
+EOF'
+sudo ansible --version > /tmp/ansibleVersion.txt
