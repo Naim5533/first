@@ -1,0 +1,11 @@
+#installing Nginx Install on Ubuntu machin
+
+sudo apt-get update -y
+sudo apt-get install nginx -y
+systemctl status nginx ( to check nginx install or not) 
+cd /etc/nginx ( to check where nginx insta ll ) 
+sudo systemctl restart nginx
+sudo systemctl stop nginx
+sudo systemctl start nginx
+
+sudo apt install net-tools ( for ifconfig command not run)
