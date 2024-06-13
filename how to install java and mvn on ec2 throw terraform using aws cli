@@ -1,0 +1,55 @@
+provider "aws" {
+  region = "us-east-1"  # Change to your preferred region
+}
+
+resource "aws_instance" "example" {
+  ami           = "ami-04b70fa74e45c3917"  # Change to your preferred AMI ID
+  instance_type = "t2.micro"
+  key_name      = "mujahed"     # Replace with your key pair name
+
+  # Define security group
+  vpc_security_group_ids = [aws_security_group.instance.id]
+
+  # User data script to install Java and Maven
+  user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              amazon-linux-extras install java-openjdk11 -y
+              yum install maven -y
+              EOF
+
+  tags = {
+    Name = "Terraform-instance"
+  }
+}
+
+resource "aws_security_group" "instance" {
+  name        = "allow_ssh_http"
+  description = "Allow SSH and HTTP inbound traffic"
+  vpc_id      = "vpc-03820275672636f67"  # Replace with your VPC ID
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "allow_ssh_http"
+  }
+}
